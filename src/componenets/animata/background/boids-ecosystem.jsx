@@ -22,7 +22,6 @@ export default function BoidsEcosystem({
   });
 
   const liveRef = useRef({
-    background,
     palette,
     cursorRadius,
     attractors,
@@ -30,7 +29,6 @@ export default function BoidsEcosystem({
   });
 
   liveRef.current = {
-    background,
     palette,
     cursorRadius,
     attractors,
@@ -94,7 +92,6 @@ export default function BoidsEcosystem({
     // Main animation loop
     const step = () => {
       const {
-        background: bg,
         cursorRadius: cr,
         attractors: atts,
         agentShape: shape,
@@ -103,10 +100,14 @@ export default function BoidsEcosystem({
       const W = w();
       const H = h();
 
-      // Background trail effect
+      // Fade previous frame to transparent so the themed CSS background shows
+      // through. This also keeps theme switches instant without repainting the
+      // whole canvas with the old background colour.
       ctx.globalAlpha = 1;
-      ctx.fillStyle = `${bg}dd`;
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.86)";
       ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = "source-over";
 
       for (const a of agents) {
         let ax = 0;
