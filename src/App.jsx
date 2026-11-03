@@ -171,7 +171,7 @@ function App() {
                 className="font-bold tracking-tight"
                 text="Discover your next Pokémon."
               >
-                Discover your next <HyperText>Pokémon</HyperText>.
+                Discover your next <HyperText className="text-orange-600 dark:text-orange-400">Pokémon</HyperText>
               </DiaTextReveal>
             </h2>
 
@@ -234,15 +234,11 @@ function App() {
             )}
 
             <div
-              className="mt-8 grid w-full grid-cols-1 items-start justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              className="mt-8 pt-8 grid w-full grid-cols-1 items-start justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3"
               id="explore"
             >
               {pokemonList.map((pokemon, index) => (
-                <Card
-                  key={pokemon.id}
-                  pokemon={pokemon}
-                  priority={index < 6}
-                />
+                <Card key={pokemon.id} pokemon={pokemon} priority={index < 6} />
               ))}
             </div>
             {nextUrl && (
