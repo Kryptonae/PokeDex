@@ -1,8 +1,11 @@
-
 import { createContext, useContext, useMemo } from "react";
 
+// Front and Back read the chosen axis from context so both faces always
+// rotate together.
 const FlipCardContext = createContext(null);
 
+// Tailwind classes for the two supported flip axes. The `back` class is
+// applied to the hidden face so it starts facing away from the viewer.
 const ROTATION_CLASS = {
   x: {
     hover: "group-hover/card:rotate-x-180 group-focus/card:rotate-x-180",
@@ -26,7 +29,8 @@ function useFlipCard() {
   return context;
 }
 
-// Main FlipCard
+// Outer wrapper owns the perspective; the inner element is the one that
+// rotates. `group/card` lets both faces respond to hover and keyboard focus.
 function FlipCardRoot({
   rotate = "y",
   className = "",
@@ -55,7 +59,7 @@ function FlipCardRoot({
   );
 }
 
-// Front Face
+// Front face: visible by default.
 function FlipCardFront({ className = "", ...props }) {
   useFlipCard();
 
@@ -67,7 +71,7 @@ function FlipCardFront({ className = "", ...props }) {
   );
 }
 
-// Back Face
+// Back face: pre-rotated 180° so it lands face-up when the card flips.
 function FlipCardBack({ className = "", ...props }) {
   const { rotate } = useFlipCard();
 
@@ -81,7 +85,8 @@ function FlipCardBack({ className = "", ...props }) {
   );
 }
 
-// Compound Component
+// Expose the faces as `FlipCard.Front` and `FlipCard.Back` while keeping a
+// single default export for consumers.
 const FlipCard = Object.assign(FlipCardRoot, {
   Front: FlipCardFront,
   Back: FlipCardBack,

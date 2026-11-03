@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap");
 @import "tailwindcss";
 
+/* Tailwind v4 uses this variant so `dark:` utilities follow the `.dark`
+   class managed by ThemeProvider instead of only the OS preference. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 html {
@@ -23,11 +25,15 @@ html.dark body {
   color: #f1f5f9;
 }
 
+/* Aurora heading: each word is kept on one line while the gradient colour
+   animation runs. */
 .aurora-text-word {
   display: inline-block;
   white-space: nowrap;
 }
 
+/* Kinetic text: the hovered character gains weight and spacing, while its
+   immediate neighbours shift slightly to keep the line feeling alive. */
 .kinetic-text-character {
   display: inline-block;
   padding-inline: 0;
@@ -68,6 +74,8 @@ html.dark body {
   }
 }
 
+/* DiaTextReveal: a gradient wipe reveals the heading one character at a time.
+   Each character receives its own --dia-delay from the React component. */
 .dia-text-reveal-gradient {
   background: linear-gradient(90deg, #a97cf8, #f38cb8, #fdcc92);
   background-clip: text;
@@ -97,6 +105,7 @@ html.dark body {
   }
 }
 
+/* Register the aurora animation as a Tailwind theme token. */
 @theme inline {
   --animate-aurora: aurora-color 8s ease-in-out infinite alternate;
 
@@ -111,6 +120,8 @@ html.dark body {
   }
 }
 
+/* The theme toggler animates its own circular reveal, so disable the
+   browser's default crossfade for the root transition. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;

@@ -14,16 +14,22 @@ import Footer from "./componenets/Footer";
 function App() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  // Search controls a single result, while the list below is the browsable
+  // Pokédex. Keeping them separate lets a search appear without replacing it.
   const [inputValue, setInputValue] = useState("");
   const [searchError, setSearchError] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [pokemonData, setPokemonData] = useState(null);
+
+  // Browsing state. `nextUrl` is PokéAPI's cursor for the following page.
   const [pokemonList, setPokemonList] = useState([]);
   const [nextUrl, setNextUrl] = useState(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Search Pokémon
+  // Search accepts a name or Pokédex number. encodeURIComponent keeps names
+  // such as "mr. mime" and user input safe inside the API URL.
   const handleSearch = async (e) => {
     e.preventDefault();
 
@@ -52,8 +58,6 @@ function App() {
 
       const jsonData = await response.json();
       setPokemonData(jsonData);
-
-      console.log("Pokémon Data:", jsonData);
     } catch (error) {
       setSearchError(error.message);
       console.error("Search Error:", error);
@@ -62,6 +66,8 @@ function App() {
     }
   };
 
+  // PokéAPI returns a lightweight page of names and URLs first. Resolve every
+  // detail request in parallel, then append the results to the current list.
   const handleLoadMore = async () => {
     if (!nextUrl || isLoadingMore) {
       return;
@@ -100,6 +106,7 @@ function App() {
     }
   };
 
+  // Initial page load: fetch the first 20 Pokémon and their full details.
   useEffect(() => {
     const fetchPokemonList = async () => {
       try {
@@ -113,8 +120,6 @@ function App() {
 
         const data = await response.json();
         setNextUrl(data.next);
-
-        console.log("List API response:", data);
 
         const pokemonDetails = await Promise.all(
           data.results.map(async (pokemon) => {
@@ -140,7 +145,8 @@ function App() {
   return (
     <>
       <div className="relative isolate min-h-screen bg-slate-50 dark:bg-slate-950">
-        {/* Full Website Background Animation */}
+        {/* Fixed particle layer keeps the animation behind all content. Its
+            colour flips with the theme so particles stay visible in both modes. */}
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 z-0"
@@ -237,6 +243,7 @@ function App() {
               className="mt-8 pt-8 grid w-full grid-cols-1 items-start justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3"
               id="explore"
             >
+              {/* The first visible row loads eagerly; the rest stay lazy. */}
               {pokemonList.map((pokemon, index) => (
                 <Card key={pokemon.id} pokemon={pokemon} priority={index < 6} />
               ))}

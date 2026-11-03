@@ -17,9 +17,11 @@ function Header() {
     <header className="relative z-10 mx-2 max-w-6xl rounded-4xl border-b border-slate-200 bg-white/10 backdrop-blur-md dark:border-white/10 dark:bg-slate-900/40 sm:mx-auto">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-4 sm:px-6">
         {/* Logo */}
+        {/* BASE_URL resolves to "/" in development and "/PokeDex/" in the
+            production build, so the logo keeps working on GitHub Pages. */}
         <a
           className="shrink-0 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-xl"
-          href="/"
+          href={import.meta.env.BASE_URL}
         >
           <span className="text-orange-600 dark:text-orange-400">Poké</span>Dex
         </a>

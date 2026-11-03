@@ -1,5 +1,6 @@
 import { memo } from "react";
 
+// One bar colour per stat keeps the back face easy to scan.
 const statColors = {
   hp: "bg-emerald-500",
   attack: "bg-rose-500",
@@ -24,6 +25,8 @@ function PokemonStats({ stats = [] }) {
       {stats.map((item) => {
         const statName = item.stat.name;
         const statValue = item.base_stat;
+        // 255 is the highest possible base stat, so it works as a stable
+        // visual scale for every Pokémon.
         const percentage = Math.min((statValue / 255) * 100, 100);
 
         return (
@@ -39,7 +42,8 @@ function PokemonStats({ stats = [] }) {
               </span>
             </div>
 
-            {/* Progress Bar */}
+            {/* ARIA attributes expose the value to screen readers even though
+                the visual representation is a coloured bar. */}
             <div
               role="progressbar"
               aria-label={statLabels[statName] || statName}

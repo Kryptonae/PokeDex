@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
+// Viewport-level pointer tracking lets the particles react to the cursor
+// without attaching listeners to the canvas itself.
 function useMousePosition() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -18,6 +20,8 @@ function useMousePosition() {
   return mousePosition;
 }
 
+// Canvas fills need numeric channels; this converts "#fff" or "#ffffff"
+// into an [r, g, b] tuple.
 function hexToRgb(hex) {
   hex = hex.replace("#", "");
 
@@ -57,6 +61,9 @@ export const Particles = ({
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
   const rafID = useRef(null);
   const resizeTimeout = useRef(null);
+
+  // Store the latest callbacks in refs. The animation loop can then read new
+  // props without being torn down and recreated on every render.
   const initCanvasRef = useRef(() => {});
   const onMouseMoveRef = useRef(() => {});
   const animateRef = useRef(() => {});
@@ -69,6 +76,8 @@ export const Particles = ({
     animateRef.current = animate;
   });
 
+  // Set up the canvas and start the loop. `color` is a dependency because a
+  // theme switch changes the particle colour and needs a fresh render.
   useEffect(() => {
     if (canvasRef.current) {
       context.current = canvasRef.current.getContext("2d");
@@ -76,6 +85,8 @@ export const Particles = ({
     initCanvasRef.current();
     animateRef.current();
 
+    // Debounce resize so dragging a window edge does not rebuild the canvas
+    // on every pixel change.
     const handleResize = () => {
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current);
@@ -145,6 +156,8 @@ export const Particles = ({
     }
   }
 
+  // Each particle gets a random position, drift, size, opacity target, and
+  // magnetism so the field feels organic rather than uniform.
   function circleParams() {
     const x = Math.floor(Math.random() * canvasSize.current.w);
     const y = Math.floor(Math.random() * canvasSize.current.h);
@@ -224,6 +237,8 @@ export const Particles = ({
         circle.y + circle.translateY - circle.size, // distance from top edge
         canvasSize.current.h - circle.y - circle.translateY - circle.size, // distance from bottom edge
       ];
+      // Fade particles out as they approach an edge, then recycle the ones
+      // that drift completely off-screen.
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
       const remapClosestEdge = parseFloat(
         remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),

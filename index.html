@@ -2,10 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <link rel="preconnect" href="https://pokeapi.co" crossorigin />
     <link rel="preconnect" href="https://raw.githubusercontent.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A modern Pokémon explorer with search, 3D stat cards, and animated light and dark themes."
+    />
+    <meta
+      name="theme-color"
+      content="#f8fafc"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#020617"
+      media="(prefers-color-scheme: dark)"
+    />
+    <!-- Apply the saved theme before React mounts to avoid a light flash. -->
     <script>
       (() => {
         try {
@@ -23,7 +38,7 @@
         }
       })();
     </script>
-    <title>pokedex</title>
+    <title>PokéDex | Pokémon Explorer</title>
   </head>
   <body>
     <div id="root"></div>

@@ -6,6 +6,8 @@ import {
 } from "react";
 import { ThemeContext } from "./theme-context";
 
+// Must match the key used by the inline script in index.html. Keeping the same
+// key lets the pre-paint script and React restore the identical theme.
 const STORAGE_KEY = "theme";
 
 function getStoredTheme() {
@@ -21,6 +23,8 @@ function getStoredTheme() {
   return null;
 }
 
+// The inline script runs before React and sets the `dark` class. Reading that
+// class first avoids a flash where React briefly disagrees with the DOM.
 function getInitialTheme() {
   if (typeof document === "undefined") {
     return "light";
@@ -43,6 +47,8 @@ function getInitialTheme() {
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(getInitialTheme);
 
+  // Validate the value before saving so a typo or unexpected caller cannot
+  // leave the app without a usable theme.
   const setTheme = useCallback((nextTheme) => {
     if (nextTheme !== "light" && nextTheme !== "dark") {
       return;
@@ -56,12 +62,15 @@ export function ThemeProvider({ children }) {
     }
   }, []);
 
+  // Keep the DOM in sync with React. colorScheme also makes native controls
+  // (scrollbars, form widgets) match the selected theme.
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     root.style.colorScheme = theme;
   }, [theme]);
 
+  // Sync theme changes made in another tab or window.
   useEffect(() => {
     const onStorage = (event) => {
       if (
@@ -76,6 +85,7 @@ export function ThemeProvider({ children }) {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
+  // Follow the operating system theme until the user explicitly chooses one.
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const onChange = (event) => {
@@ -90,6 +100,8 @@ export function ThemeProvider({ children }) {
     return () => media.removeEventListener("change", onChange);
   }, []);
 
+  // Memoise the context value so consumers only re-render when the theme
+  // actually changes.
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 
   return (

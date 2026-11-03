@@ -1,5 +1,6 @@
 const CURRENT_YEAR = new Date().getFullYear();
 
+// Footer links stay in one place so the markup below can just map over them.
 const navigation = {
   main: [
     { name: "Home", href: "#home" },
@@ -9,7 +10,7 @@ const navigation = {
   social: [
     {
       name: "Twitter",
-      // Replace "#" with your Twitter profile URL.
+      // Update these profile URLs if the project changes hands.
       href: "https://x.com/Krypton_ae",
       icon: (props) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -19,7 +20,6 @@ const navigation = {
     },
     {
       name: "GitHub",
-      // Replace "#" with your GitHub profile URL.
       href: "https://github.com/Kryptonae",
       icon: (props) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -33,7 +33,6 @@ const navigation = {
     },
     {
       name: "LinkedIn",
-      // Replace "#" with your LinkedIn profile URL.
       href: "https://www.linkedin.com/in/ashwani-kumar-263605300/",
       icon: (props) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -48,12 +47,10 @@ const navigation = {
   ],
 };
 
+// `id="about"` also makes the footer the target of the navbar's About link.
 function Footer({ id = "about" }) {
   return (
-    <footer
-      id={id}
-      className="w-full"
-    >
+    <footer id={id} className="w-full">
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <nav aria-label="Footer navigation" className="flex flex-wrap justify-center">
           {navigation.main.map((item) => (
