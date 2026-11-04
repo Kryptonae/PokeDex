@@ -82,10 +82,10 @@ function Card({ pokemon, priority = false }) {
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">
               Pokémon
             </p>
-            <h2 className="mt-1 text-3xl font-bold capitalize">{pokemon.name}</h2>
+            <h2 className="mt-1 text-[22px] font-bold capitalize">{pokemon.name}</h2>
           </div>
           <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-bold text-white/80">
             #{String(pokemon.id).padStart(3, "0")}
